@@ -84,21 +84,60 @@ Open [ClickHouse UI](http://localhost:8123/play) again and you should see your c
 Go to [Metabase UI](http://localhost:3000/) and create a question.
 1. Each team/territory wants to understand which employees are selling the most products
 ```shell
-
+SELECT
+    st.sales_territory_region,
+    e.employee_name,
+    COUNT(sd.sales_id) AS total_sales
+FROM
+    sales_data sd
+JOIN
+    employee_data e ON sd.sales_employee_id = e.employee_id
+JOIN
+    sales_territory_data st ON sd.sales_territory_id = st.territory_id
+GROUP BY
+    st.sales_territory_region,
+    e.employee_name
+ORDER BY
+    st.sales_territory_region,
+    total_sales DESC;
 ```
 
-2. Each team / territory wants to understand their top 100 customers ( the average time between purchases and the average purchase price).
-```shell
-
-```
-3. The operations team wants to be able to know the Year over Year change of sales
+2. The operations team wants to be able to know the Year over Year change of sales
 across the entire organization.
 ```shell
+WITH yearly_sales AS (
+    SELECT
+        EXTRACT(YEAR FROM CAST(order_date AS DATE)) AS sales_year,
+        SUM(CAST(sales_amount AS DECIMAL))::decimal AS total_sales
+    FROM
+        sales_data
+    GROUP BY
+        EXTRACT(YEAR FROM CAST(order_date AS DATE))
+)
+SELECT
+    current_year.sales_year AS current_year,
+    current_year.total_sales AS current_year_sales,
+    previous_year.total_sales AS previous_year_sales,
+    (current_year.total_sales - previous_year.total_sales) AS yoy_change
+FROM
+    yearly_sales current_year
+LEFT JOIN
+    yearly_sales previous_year ON current_year.sales_year = previous_year.sales_year + 1;
 
 ```
-4. They want to have a real time view of their sales, by region and country.
+3. They want to have a real time view of their sales, by region and country.
 ```shell
-
+SELECT
+    std.sales_territory_region,
+    std.sales_territory_country,
+    SUM(CAST(sd.sales_amount AS DECIMAL)) AS total_sales
+FROM
+    sales_data sd
+JOIN
+    sales_territory_data std ON sd.sales_territory_id = std.territory_id
+GROUP BY
+    std.sales_territory_region,
+    std.sales_territory_country;
 ```
 
 ## Contributed by Clifford Frempong
