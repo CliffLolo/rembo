@@ -172,7 +172,7 @@ Monitoring capabilities are set up for critical services like Kafka to closely m
 ### Redundancy and Replication:
 Kafka's replication factor ensures data redundancy, while Debezium captures database changes redundantly to prevent potential data loss. Additionally, ClickHouse can be configured for replication and high availability, enhancing data durability and ensuring continuous availability.
 
-### Backup and Restore (Side note):
+### Side note :)
 Though not explicitly defined in the Docker Compose file, robust backup and restore mechanisms are crucial. Regular backups of critical databases like Postgres and ClickHouse are essential for recovering from catastrophic failures and ensuring data integrity.
 
 
