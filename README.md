@@ -138,7 +138,7 @@ LEFT JOIN
 ```
 3. They want to have a real time view of their sales, by region and country.
 ```shell
-<img width="1215" alt="Screenshot 2024-03-11 at 02 45 33" src="https://github.com/CliffLolo/rembo/assets/41656028/d80b54f1-46b4-46e4-8013-0623fc7b8779">
+<img width="1197" alt="Screenshot 2024-03-11 at 02 50 26" src="https://github.com/CliffLolo/rembo/assets/41656028/732a24e5-ddb9-4d16-8bef-fbd886fb9635">
 
 SELECT
     std.sales_territory_region,
