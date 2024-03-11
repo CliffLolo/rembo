@@ -261,7 +261,7 @@ SELECT
     `after.total_product_cost` as total_product_cost,
     `after.unit_price` as unit_price,
     `after.unit_price_discount_pct` as unit_price_discount_pct,
-    `after.sales_employee_id` as employee_id
+    `after.sales_employee_id` as sales_employee_id
 FROM rembo_data
 WHERE `source.table` = 'sales';
 CREATE TABLE sales_data
