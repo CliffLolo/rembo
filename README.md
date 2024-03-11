@@ -1,4 +1,7 @@
 # Change Data Capture (CDC) using Postgres + Debezium + Kafka + ClickHouse + Metabase
+Architectural Diagram
+![Image 3-11-24 at 2 09 AM](https://github.com/CliffLolo/rembo/assets/41656028/3f81325a-4353-4579-8995-5acab71608f8)
+
 
 Schema Diagram
 
