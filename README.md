@@ -67,12 +67,12 @@ Head over to [Consumer Groups](http://localhost:8080/groups) to verify that Clic
 ### 6. Verify ClickHouse data
 Open [ClickHouse UI](http://localhost:8123/play) and verify that PostgreSQL data are already pushed to ClickHouse from ClickHouseSink Connector by executing below:
 ```text
-SELECT * FROM customer_data FINAL;
-SELECT * FROM employee_data FINAL;
-SELECT * FROM sales_territory_data FINAL;
-SELECT * FROM sales_data FINAL;
+SELECT COUNT(*) FROM customer_data FINAL;
+SELECT COUNT(*) FROM employee_data FINAL;
+SELECT COUNT(*) FROM sales_territory_data FINAL;
+SELECT COUNT(*) FROM sales_data FINAL;
 ```
-<img width="1233" alt="Screenshot 2024-03-10 at 22 29 05" src="https://github.com/CliffLolo/rembo/assets/41656028/f65e6c65-4e91-4804-8eb6-54728d18b123">
+
 <img width="1222" alt="Screenshot 2024-03-11 at 01 00 17" src="https://github.com/CliffLolo/rembo/assets/41656028/8a65994a-026b-44ad-9f04-edc70cfd8daf">
 <img width="1215" alt="Screenshot 2024-03-11 at 01 18 10" src="https://github.com/CliffLolo/rembo/assets/41656028/7e91bded-7706-46b2-89a0-9be37f0972ca">
 <img width="1225" alt="Screenshot 2024-03-11 at 01 52 46" src="https://github.com/CliffLolo/rembo/assets/41656028/432aa1b2-bd96-47aa-b2b1-4d9ff5af970f">
