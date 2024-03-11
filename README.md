@@ -92,7 +92,7 @@ Go to [Metabase UI](http://localhost:3000/) and create a question.
 1. Each team/territory wants to understand which employees are selling the most products
 ```shell
 
-<img width="1217" alt="Screenshot 2024-03-11 at 02 32 24" src="https://github.com/CliffLolo/rembo/assets/41656028/9964ff11-68bd-427a-a6e6-6c11f8fe7627">
+src="https://github.com/CliffLolo/rembo/assets/41656028/9964ff11-68bd-427a-a6e6-6c11f8fe7627">
 
 SELECT
     st.sales_territory_region,
@@ -116,7 +116,7 @@ ORDER BY
 across the entire organization.
 ```shell
 
-<img width="1210" alt="Screenshot 2024-03-11 at 02 41 51" src="https://github.com/CliffLolo/rembo/assets/41656028/1feab1b0-8198-4c85-b4d2-180dd96f741b">
+src="https://github.com/CliffLolo/rembo/assets/41656028/1feab1b0-8198-4c85-b4d2-180dd96f741b">
 
 WITH yearly_sales AS (
     SELECT
@@ -141,7 +141,7 @@ LEFT JOIN
 3. They want to have a real time view of their sales, by region and country.
 ```shell
 
-<img width="1197" alt="Screenshot 2024-03-11 at 02 50 26" src="https://github.com/CliffLolo/rembo/assets/41656028/732a24e5-ddb9-4d16-8bef-fbd886fb9635">
+src="https://github.com/CliffLolo/rembo/assets/41656028/732a24e5-ddb9-4d16-8bef-fbd886fb9635">
 
 SELECT
     std.sales_territory_region,
