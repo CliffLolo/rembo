@@ -69,6 +69,10 @@ SELECT * FROM employee_data FINAL;
 SELECT * FROM sales_territory_data FINAL;
 SELECT * FROM sales_data FINAL;
 ```
+<img width="1233" alt="Screenshot 2024-03-10 at 22 29 05" src="https://github.com/CliffLolo/rembo/assets/41656028/f65e6c65-4e91-4804-8eb6-54728d18b123">
+<img width="1222" alt="Screenshot 2024-03-11 at 01 00 17" src="https://github.com/CliffLolo/rembo/assets/41656028/8a65994a-026b-44ad-9f04-edc70cfd8daf">
+<img width="1215" alt="Screenshot 2024-03-11 at 01 18 10" src="https://github.com/CliffLolo/rembo/assets/41656028/7e91bded-7706-46b2-89a0-9be37f0972ca">
+
 <img width="1238" alt="Screenshot 2024-03-10 at 22 29 52" src="https://github.com/CliffLolo/rembo/assets/41656028/0cd77ea5-8e31-4b09-8d93-d4d785b46df2">
 
 ## Testing
