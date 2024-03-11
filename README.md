@@ -90,10 +90,10 @@ Open [ClickHouse UI](http://localhost:8123/play) again and you should see your c
 ### Analytics on Metabase
 Go to [Metabase UI](http://localhost:3000/) and create a question.
 1. Each team/territory wants to understand which employees are selling the most products
-```shell
 
 <img width="1217" alt="Screenshot 2024-03-11 at 02 32 24" src="https://github.com/CliffLolo/rembo/assets/41656028/9964ff11-68bd-427a-a6e6-6c11f8fe7627">
 
+```shell
 SELECT
     st.sales_territory_region,
     e.employee_name,
@@ -114,10 +114,10 @@ ORDER BY
 
 2. The operations team wants to be able to know the Year over Year change of sales
 across the entire organization.
-```shell
 
 <img width="1210" alt="Screenshot 2024-03-11 at 02 41 51" src="https://github.com/CliffLolo/rembo/assets/41656028/1feab1b0-8198-4c85-b4d2-180dd96f741b">
 
+```shell
 WITH yearly_sales AS (
     SELECT
         EXTRACT(YEAR FROM CAST(order_date AS DATE)) AS sales_year,
@@ -139,10 +139,9 @@ LEFT JOIN
 
 ```
 3. They want to have a real time view of their sales, by region and country.
-```shell
 
 <img width="1197" alt="Screenshot 2024-03-11 at 02 50 26" src="https://github.com/CliffLolo/rembo/assets/41656028/732a24e5-ddb9-4d16-8bef-fbd886fb9635">
-
+```shell
 SELECT
     std.sales_territory_region,
     std.sales_territory_country,
