@@ -1,11 +1,13 @@
 # Change Data Capture (CDC) using Postgres + Debezium + Kafka + ClickHouse + Metabase
-Architectural Diagram
+
+### Architectural Diagram
 ![Image 3-11-24 at 2 09 AM](https://github.com/CliffLolo/rembo/assets/41656028/3f81325a-4353-4579-8995-5acab71608f8)
 
 
-Schema Diagram
 
-![drawSQL-image-export-2024-03-10 2](https://github.com/CliffLolo/rembo/assets/41656028/aad36d28-f63f-4b5f-9e99-e9e4552044df)
+### Schema Diagram
+![drawSQL-image-export-2024-03-10 2](https://github.com/CliffLolo/rembo/assets/41656028/899a2f95-4e32-4a17-a25f-979cdf5a27bb)
+
 
 
 ## Prerequisites
@@ -25,6 +27,7 @@ The project consists of the following services:
 * Kowl
 * Adminer
 * Metabase
+
 ## Run Locally
 
 ### 1. Clone repository and start docker containers
@@ -48,37 +51,41 @@ docker-compose up -d
 ```shell
 docker compose ps
 ```
+<img width="1284" alt="Screenshot 2024-03-17 at 17 47 41" src="https://github.com/CliffLolo/rembo/assets/41656028/897db708-c305-4159-9c1b-cf20e972dcee">
+
 If all is well, you'll have everything running in their own containers, with Debezium configured to ship changes from Postgres into Kafka.
 
 ### 5. Verify PostgreSQL data
 Access the [Postgres UI](http://localhost:7775/?pgsql=postgres&username=postgres&db=rembo&ns=public) and confirm the presence of 4 tables **employee**, **sales_territorry**, **customer** and **sales** with data in them. Use "**postgres**" as the username and password when logging in.
-<img width="1245" alt="Screenshot 2024-03-10 at 22 27 28" src="https://github.com/CliffLolo/rembo/assets/41656028/04fbdaf8-105e-4a28-a983-cd61176221f2">
+![screenshot-localhost_7775-2024 03 10-20_30_49](https://github.com/CliffLolo/rembo/assets/41656028/fd805190-53c6-4c98-8040-8ef21ddd15bf)
+![screenshot-localhost_7775-2024 03 10-20_32_06](https://github.com/CliffLolo/rembo/assets/41656028/5c9f035f-ec90-4d55-8da7-312ab17e9721)
+
 
 ### 4. Verify connection between Debezium Connector and Kafka
 Head over to [Kowl topics](http://localhost:8080/topics) and verify that the Debezium Connector has sucessfully published PostgreSQL data to a Kafka topic. There should be a topic named **rembo_data**.
-<img width="1231" alt="Screenshot 2024-03-10 at 22 28 20" src="https://github.com/CliffLolo/rembo/assets/41656028/73c8eb72-f52e-4b9f-831b-4b2a7a241d93">
+![screenshot-localhost_8080-2024 03 10-20_32_53](https://github.com/CliffLolo/rembo/assets/41656028/167249ac-cf8b-442a-a30b-7be3ee97397e)
 
 
 ### 5. Verify connection between ClickHouseSink Connector and Kafka
 Head over to [Consumer Groups](http://localhost:8080/groups) to verify that ClickHouseSink Connector is a stable consumer, and it has successfully subscribed to the **rembo_data** topic.
-<img width="1233" alt="Screenshot 2024-03-10 at 22 29 05" src="https://github.com/CliffLolo/rembo/assets/41656028/f65e6c65-4e91-4804-8eb6-54728d18b123">
+![screenshot-localhost_8080-2024 03 10-20_33_19](https://github.com/CliffLolo/rembo/assets/41656028/8b511ede-9844-4807-9d21-5acbf135da96)
 
 
 ### 6. Verify ClickHouse data
 Open [ClickHouse UI](http://localhost:8123/play) and verify that PostgreSQL data are already pushed to ClickHouse from ClickHouseSink Connector by executing below:
 ```text
-SELECT COUNT(*) FROM customer_data FINAL;
-SELECT COUNT(*) FROM employee_data FINAL;
-SELECT COUNT(*) FROM sales_territory_data FINAL;
-SELECT COUNT(*) FROM sales_data FINAL;
+SELECT COUNT(*) FROM customer_data;
+SELECT COUNT(*) FROM employee_data;
+SELECT COUNT(*) FROM sales_territory_data;
+SELECT COUNT(*) FROM sales_data;
 ```
 
 <img width="1222" alt="Screenshot 2024-03-11 at 01 00 17" src="https://github.com/CliffLolo/rembo/assets/41656028/8a65994a-026b-44ad-9f04-edc70cfd8daf">
 <img width="1215" alt="Screenshot 2024-03-11 at 01 18 10" src="https://github.com/CliffLolo/rembo/assets/41656028/7e91bded-7706-46b2-89a0-9be37f0972ca">
-<img width="1225" alt="Screenshot 2024-03-11 at 01 52 46" src="https://github.com/CliffLolo/rembo/assets/41656028/432aa1b2-bd96-47aa-b2b1-4d9ff5af970f">
-<img width="1223" alt="Screenshot 2024-03-11 at 01 54 39" src="https://github.com/CliffLolo/rembo/assets/41656028/3dd1d32a-da41-4f23-b441-2b856aff1c28">
+<img width="1220" alt="Screenshot 2024-03-17 at 19 49 32" src="https://github.com/CliffLolo/rembo/assets/41656028/cfefe47b-9460-42ce-a631-2558d97d98f1">
+<img width="1216" alt="Screenshot 2024-03-17 at 19 50 28" src="https://github.com/CliffLolo/rembo/assets/41656028/c4962c14-0c3b-4136-9be8-32c487165d73">
 
-## Try it our!
+## Try it out!
 
 ### 1. Make new Inserts or Updates in existing PostgreSQL tables
 Go to [Postgres UI](http://localhost:7775/?pgsql=postgres&username=postgres&db=rembo&ns=public&table=employee) and insert or update existing rows.
@@ -87,8 +94,56 @@ Go to [Postgres UI](http://localhost:7775/?pgsql=postgres&username=postgres&db=r
 Open [ClickHouse UI](http://localhost:8123/play) again and you should see your changes already applied.
 
 
-### Analytics on Metabase
-Go to [Metabase UI](http://localhost:3000/) and create a question.
+## Business Intelligence: Metabase
+
+1. In a browser, go to <localhost:3030> _(or <IP_ADDRESS:3030> if running on a VM)._
+
+2. Click **Let's get started**.
+
+3. Complete the first set of fields asking for your email address. This
+   information isn't crucial for anything but does have to be filled in.
+
+4. On the **Add your data** page, fill in the following information:
+
+   | Field             | Enter...                        |
+   | ----------------- | ------------------------------- |
+   | Database          | **ClickHouse**                  |
+   | Name              | **RemboCompanyDB**              |
+   | Host              | **clickhouse-server**           |
+   | Port              | **8123**                        |
+   | Database name     | **default**                     |
+   | Database username | **default**                     |
+   | Database password | Your ClickHouse Password        |
+
+5. Proceed past the screens until you reach your primary dashboard.
+
+6. Click **New**
+
+7. Click **SQL query**.
+
+8. From **Select a database**, select **Rembo Company DB**.
+
+9. In the query editor, enter:
+
+   ```sql
+   SELECT
+        std.sales_territory_region,
+        std.sales_territory_country,
+        SUM(sd.unit_price * sd.order_quantity) AS total_sales
+    FROM
+        sales_data sd
+    JOIN
+        sales_territory_data std ON sd.sales_territory_id = std.territory_id
+    GROUP BY
+        std.sales_territory_region,
+        std.sales_territory_country
+    ORDER BY std.sales_territory_country; 
+   ```
+
+10. You can save the output and add it to a dashboard, once you've drafted a dashboard you can manually set the refresh rate to 1 second by adding `#refresh=1` to the end of the URL, here is an example of a real-time dashboard of the sales by region and country:
+![9FCCB82D-BA33-4DA9-9A4B-EF172DD1E41F](https://github.com/CliffLolo/rembo/assets/41656028/2d6f8994-b691-442e-ab98-f327c58122e6)
+
+### Insights
 1. Each team/territory wants to understand which employees are selling the most products
 
 <img width="1217" alt="Screenshot 2024-03-11 at 02 32 24" src="https://github.com/CliffLolo/rembo/assets/41656028/9964ff11-68bd-427a-a6e6-6c11f8fe7627">
@@ -139,8 +194,8 @@ LEFT JOIN
 
 ```
 3. They want to have a real time view of their sales, by region and country.
+<img width="1218" alt="Screenshot 2024-03-17 at 19 52 57" src="https://github.com/CliffLolo/rembo/assets/41656028/73036588-6c58-4517-b487-c4e82369b860">
 
-<img width="1197" alt="Screenshot 2024-03-11 at 02 50 26" src="https://github.com/CliffLolo/rembo/assets/41656028/732a24e5-ddb9-4d16-8bef-fbd886fb9635">
 
 ```shell
 SELECT
@@ -177,5 +232,13 @@ Kafka's replication factor ensures data redundancy, while Debezium captures data
 Regular backups of critical databases like Postgres and ClickHouse are essential for recovering from catastrophic failures and ensuring data integrity.
 
 
+---
+
+#### You have some infrastructure running in Docker containers, so don't forget to run `docker-compose down` to shut everything down!
+---
+
 
 ## Contributed by Clifford Frempong
+
+
+
