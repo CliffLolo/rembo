@@ -8,15 +8,23 @@ services:
     hostname: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_USER: postgres
     ports:
       - "5432:5432"
     volumes:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/postgres-init.sql
 
+  loadgen:
+    build: loadgen
+    container_name: loadgen
+    init: true
+    depends_on:
+      - postgres
+
   clickhouse:
     image: clickhouse/clickhouse-server:23.3.13
+
     container_name: clickhouse-server
     ports:
       - "8123:8123"
@@ -66,11 +74,12 @@ services:
     container_name: kafka-connect
     depends_on:
       - postgres
+      - loadgen
       - zookeeper
       - kafka
     ports:
       - "8083:8083"
-    restart: on-failure
+    restart: always
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'kafka:29092'
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
@@ -87,14 +96,21 @@ services:
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+    
+    volumes:
+      - ./connector_plugins:/connector_plugins
+    
     command:
       - bash
       - -c
       - |
-        echo "Installing connector plugins"
-        confluent-hub install --no-prompt debezium/debezium-connector-postgresql:1.5.0
-        confluent-hub install --no-prompt clickhouse/clickhouse-kafka-connect:v1.0.12
+        # echo "Installing connector plugins"
+        # confluent-hub install --no-prompt debezium/debezium-connector-postgresql:1.5.0
+        # confluent-hub install --no-prompt clickhouse/clickhouse-kafka-connect:v1.0.12
 
+        echo "Copying connector plugins"
+        cp -r /connector_plugins/debezium-debezium-connector-postgresql-1.5.0 /usr/share/confluent-hub-components
+        cp -r /connector_plugins/clickhouse-kafka-connect-v1.0.12 /usr/share/confluent-hub-components
         #
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run &
@@ -118,7 +134,7 @@ services:
               "database.hostname": "postgres",
               "database.port": "5432",
               "database.user": "postgres",
-              "database.password": "postgres",
+              "database.password": "${MYPG_PASSWORD}",
               "database.server.name": "DockerServer",
               "database.dbname": "rembo",
               "transforms": "flatten,routeTopic",
