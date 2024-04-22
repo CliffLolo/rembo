@@ -96,7 +96,7 @@ Open [ClickHouse UI](http://localhost:8123/play) again and you should see your c
 
 ## Business Intelligence: Metabase
 
-1. In a browser, go to <localhost:3030> _(or <IP_ADDRESS:3030> if running on a VM)._
+1. In a browser, go to [Metabase UI](http://localhost:3000)
 
 2. Click **Let's get started**.
 
@@ -211,6 +211,34 @@ GROUP BY
     std.sales_territory_country;
 ```
 
+
+4. Each team / territory wants to understand their top 100 customers ( the average time between purchases and the average purchase price).
+```shell
+
+SELECT
+    st.sales_territory_region,
+    cd.customer_id,
+    AVG(sd.order_date - prev.prev_sales_date) AS avg_time_between_purchases,
+    AVG(sd.sales_amount) AS avg_purchase_price
+FROM (
+    SELECT
+        sd.client_id,
+        MAX(sd.order_date) AS prev_sales_date
+    FROM sales_data sd
+    GROUP BY sd.client_id
+) AS prev
+JOIN sales_data sd ON prev.client_id = sd.client_id
+JOIN customer_data cd ON sd.client_id = cd.customer_id
+JOIN sales_territory_data st ON sd.sales_territory_id = st.territory_id
+GROUP BY
+    st.sales_territory_region,
+    cd.customer_id
+ORDER BY
+    st.sales_territory_region ASC,
+    avg_purchase_price DESC
+LIMIT 100
+
+```
 ## Pipeline Resilience Strategies
 
 ### Fault Isolation:
