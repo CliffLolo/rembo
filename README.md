@@ -213,8 +213,11 @@ GROUP BY
 
 
 4. Each team / territory wants to understand their top 100 customers ( the average time between purchases and the average purchase price).
-```shell
 
+![screenshot-localhost_3000-2024 04 22-13_20_11](https://github.com/Pierian-Data/Complete-Python-3-Bootcamp/assets/41656028/fbd050b8-f3ce-4440-a709-b7a65b53e8b4)
+
+
+```shell
 SELECT
     st.sales_territory_region,
     cd.customer_id,
